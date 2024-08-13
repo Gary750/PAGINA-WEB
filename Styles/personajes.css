@@ -1,0 +1,41 @@
+.catalogoDePersonajes {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centra verticalmente el contenido */
+    flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
+    color: #1d0303;
+    text-align: justify;
+}
+.catalogoDePersonajes .personajes {
+    background-color: #000000;
+    display: flex;
+    justify-content: left;
+    margin-top: 5px;
+    padding: 30px;
+    margin-right: 5px;
+    width: 70%;
+    border-radius: 10px;
+}
+
+.imagenes {
+    width: 30%;
+    border: 3px solid #3de867;
+    border-radius: 10px;
+    float: left;
+    margin-right: 20px;
+}
+
+.cajaDeTexto h3{
+    font-size: 30px;
+    text-transform: uppercase;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #74fd12;
+}
+
+.cajaDeTexto p{
+    margin-top: 10px;
+}
+
+.cajaDeTexto p{
+    color: white;
+}

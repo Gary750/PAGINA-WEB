@@ -1,0 +1,150 @@
+<?php
+include 'conexionBD.php';
+
+// Variables para almacenar resultados
+$marca = '';
+$especificaciones = '';
+$precio = '';
+
+// Verificar el método de solicitud
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id = $_POST['id'];
+    // Consultar datos
+    if (isset($_POST['consultar'])) {
+        $query = "SELECT marca, especificaciones, precio FROM computadora WHERE id =?";
+        // Ejecutar la consulta
+        if ($stmt = $conexion->prepare($query)) {
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $marca = $row['marca'];
+                    $especificaciones = $row['especificaciones'];
+                    $precio = $row['precio'];
+                }
+            } else {
+                echo "No hay datos para consultar.";
+            }
+            // Cerrar la declaración
+            $stmt->close();
+        } else {
+            echo "Error al preparar la consulta: " . $conexion->error;
+        }
+    }
+} 
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computadoras</title>
+    <link rel="stylesheet" href="../Styles/Formularios.css">
+    <link rel="stylesheet" href="../Styles/fontello.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">TechStore</div>
+            <ul>
+                <li><a href="../index.html">Inicio</a></li>
+                <li>
+                    <a href="../catalogos.html">Catálogo De Computadoras</a>
+                </li>
+                <li><a href="../products.html">Administración de Computadoras</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section id="add" class="form-section"">
+        <h2>Agregar Nueva Computadora</h2>
+        <form form action="add_Pc.php" method="post">
+            <label for="brand">Marca y Nombre:</label>
+                <input type="text" id="brand" name="brand">
+            <label for="specs">Especificaciones:</label>
+            <textarea id="specs" name="specs"></textarea>
+                <label for="price">Precio:</label>
+            <input type="number" id="specs" name="price">
+            <button type="submit" class="btn">Agregar</butto>
+        </form>
+    </section>
+
+    <section id="list" class="list-section">
+        <h2>Lista de Computadoras</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marca y Nombre</th>
+                    <th>Especificaciones</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <form id="consult-form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+                            <input type="text" name="id" placeholder="Ingrese ID" value="<?php echo isset($id) ? $id : ''; ?>">
+                            <button type="submit" name="consultar" class="btn-consult">Consultar</button>
+                        </form>
+                    </td>
+                    <td><?php echo $marca; ?></td>
+                    <td><?php echo $especificaciones; ?></td>
+                    <td><?php echo $precio; ?></td>
+                    <td>
+                        <!-- Botón para Eliminar -->
+                        <form action="delete_pc.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?php echo isset($id) ? $id : ''; ?>">
+                            <button type="submit" class="btn-delete">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                <!-- Más filas aquí -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="update" class="form-section">
+        <h2>Actualizar Computadora</h2>
+        <form action="update_pc.php" method="post">
+            <!-- Campo para ingresar el ID -->
+            <label for="update-id">ID de Computadora:</label>
+            <input type="number" id="update-id" name="update-id" required>
+    
+            <!-- Campo para ingresar la Marca y Nombre -->
+            <label for="update-brand">Marca y Nombre:</label>
+            <input type="text" id="update-brand" name="update-brand" required>
+    
+            <!-- Campo para ingresar las Especificaciones -->
+            <label for="update-specs">Especificaciones:</label>
+            <textarea id="update-specs" name="update-specs" required></textarea>
+    
+            <!-- Campo para ingresar el Precio -->
+            <label for="update-price">Precio:</label>
+            <input type="number" id="update-price" name="update-price" step="0.01" required>
+    
+            <!-- Botón para enviar el formulario -->
+            <button type="submit" class="btn" name="actualizar">Actualizar</button>
+        </form>
+    </section>
+
+
+    <footer>
+        <div>
+            <p class="pie">Copyright&copy; Angel Martinez</p>
+            <div class="sociales">
+                <a href="https://www.instagram.com/ams_.angel/" class="icon-instagram" aria-label="Instagram"></a>
+                <a href="https://www.facebook.com/ams.angel750" class="icon-facebook" aria-label="Facebook"></a>
+                <a href="https://twitter.com/Gary_ams750" class="icon-twitter" aria-label="Twitter"></a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
